@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  payment-routing:
+    build: .
+    image: payment-routing:latest
+    container_name: payment-routing
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      # Override simulation failure rates at runtime if desired:
+      # - GATEWAY_GATEWAYS_RAZORPAY_FAILURE-RATE=20
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/gateways/stats || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

@@ -1,0 +1,35 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: payment-routing
+
+logging:
+  level:
+    com.platinumrx: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+gateway:
+  health:
+    window-minutes: 15
+    threshold: 0.90
+    cooldown-minutes: 30
+    min-samples: 5
+    half-open-traffic-percent: 5
+
+  # Gateway configuration: name keys must match gateway client names (lowercase)
+  gateways:
+    razorpay:
+      weight: 40
+      failure-rate: 10    # 10% simulated failure rate
+      latency-ms: 100
+    payu:
+      weight: 35
+      failure-rate: 15    # 15% simulated failure rate
+      latency-ms: 150
+    cashfree:
+      weight: 25
+      failure-rate: 5     # 5% simulated failure rate
+      latency-ms: 80
